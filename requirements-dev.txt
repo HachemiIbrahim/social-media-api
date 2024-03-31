@@ -1,3 +1,0 @@
-isort
-ruff
-black
