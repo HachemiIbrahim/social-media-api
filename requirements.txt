@@ -3,3 +3,5 @@ uvicorn
 sqlalchemy
 passlib
 bcrypt
+python-multipart
+aiofiles
