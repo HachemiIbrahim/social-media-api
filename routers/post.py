@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -21,3 +23,8 @@ def create_post(request: schema.PostBase, db: Session = Depends(get_db)):
     if request.image_url_type not in image_url_types:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     return post_repository.create(request, db)
+
+
+@router.get("", response_model=List[schema.PostDisplay])
+def get_all_posts(db: Session = Depends(get_db)):
+    return post_repository.get_all(db)
