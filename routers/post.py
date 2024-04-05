@@ -6,8 +6,10 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
+from auth.oauth2 import get_current_user
 from db.database import get_db
 from repository import post_repository
+from routers.schema import UserAuth
 
 from . import schema
 
@@ -22,7 +24,11 @@ image_url_types = ["relative", "absolute"]
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=schema.PostDisplay)
-def create_post(request: schema.PostBase, db: Session = Depends(get_db)):
+def create_post(
+    request: schema.PostBase,
+    db: Session = Depends(get_db),
+    current_user: UserAuth = Depends(get_current_user),
+):
     if request.image_url_type not in image_url_types:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     return post_repository.create(request, db)
@@ -34,7 +40,7 @@ def get_all_posts(db: Session = Depends(get_db)):
 
 
 @router.post("/images")
-def upload_image(image: UploadFile):
+def upload_image(image: UploadFile, current_user: UserAuth = Depends(get_current_user)):
     letters = string.ascii_letters
     random_string = "".join(random.choice(letters) for i in range(6))
     new = f"_{random_string}."
