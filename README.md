@@ -1,4 +1,4 @@
-#Social Media App
+# Social Media App
 
 This project is a FastAPI application designed to mimic the core functionalities of a social media app. It includes user registration and authentication, the ability to create posts and publish images, add comment and delete posts.
 
